@@ -10,14 +10,40 @@ import mvc.model.Manga;
  */
 public class MainSvc {
 
-	private List<Manga> mangas;
-
-	private final String mangas_to_read = "";
-	private final String mangas_in_progress = "";
-	private final String mangas_finished = "";
+	private List<Manga> mangasToRead;
+	private List<Manga> mangasInProgress;
+	private List<Manga> mangasFinished;
 
 	public void loadMangas() {
 
+		mangasToRead = MangaLister.getMangas("TO_READ");
+		mangasInProgress = MangaLister.getMangas("IN_PROGRESS");
+		mangasFinished = MangaLister.getMangas("FINISHED");
+
+	}
+
+	public List<Manga> getMangasToRead() {
+		return mangasToRead;
+	}
+
+	public void setMangasToRead(List<Manga> mangasToRead) {
+		this.mangasToRead = mangasToRead;
+	}
+
+	public List<Manga> getMangasInProgress() {
+		return mangasInProgress;
+	}
+
+	public void setMangasInProgress(List<Manga> mangasInProgress) {
+		this.mangasInProgress = mangasInProgress;
+	}
+
+	public List<Manga> getMangasFinished() {
+		return mangasFinished;
+	}
+
+	public void setMangasFinished(List<Manga> mangasFinished) {
+		this.mangasFinished = mangasFinished;
 	}
 
 }

@@ -1,3 +1,6 @@
+<%@ page import="mvc.model.*" %>
+<%@ page import="service.*" %>
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -6,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="mangalist/css/main.css" />
 <title>Mangalist : gère tes mangas lus ou en cours !</title>
 <body>
 
@@ -14,6 +17,29 @@
 
 	<!-- Menu : contient les boutons et liens permettant de gérer la liste des mangas, d'en ajouter, supprimer,... -->
 	<section class="section_manage_mangas">
+	
+	<%
+	MainSvc svc = new MainSvc();
+	svc.loadMangas();
+	%>
+	
+	<table>
+	<tr>
+		<th>Titre</th>
+		<th>Genre</th>
+		<th>Chapitre</th>
+		<th>Priorité</th>
+	</tr>
+	<%
+	for(Manga m : svc.getMangasInProgress()) { %>
+		<tr>
+			<td><%= m.getTitle() %></td>
+			<td><%= m.getStyle() %></td>
+			<td><%= m.getChapter() %></td>
+			<td><%= m.getPriority() %></td>
+		</tr>
+	<% } %>
+	</table>
 	
 	 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet dui sem. Donec dignissim sed justo et ornare. 
 	 Fusce massa nulla, sollicitudin in sapien non, consectetur dictum orci. Vestibulum ante ipsum primis in faucibus orci luctus
