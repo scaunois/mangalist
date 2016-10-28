@@ -1,5 +1,8 @@
+
 <%@ page import="mvc.model.*" %>
 <%@ page import="service.*" %>
+
+<%@ page import="java.util.*" %>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -19,8 +22,11 @@
 	<section class="section_manage_mangas">
 	
 	<%
+	String status = request.getParameter("status");
+	System.out.println("statut actuel : ");
 	MainSvc svc = new MainSvc();
 	svc.loadMangas();
+	List<Manga> mangasInCurrentStatus = svc.getMangas(status);
 	%>
 	
 	<table>
@@ -31,7 +37,7 @@
 		<th>Priorité</th>
 	</tr>
 	<%
-	for(Manga m : svc.getMangasInProgress()) { %>
+	for(Manga m : mangasInCurrentStatus) { %>
 		<tr>
 			<td><%= m.getTitle() %></td>
 			<td><%= m.getStyle() %></td>

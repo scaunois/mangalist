@@ -22,6 +22,25 @@ public class MainSvc {
 
 	}
 
+	public List<Manga> getMangas(String status) {
+
+		if (status == null) {
+			return getMangasInProgress();
+		}
+
+		switch (status) {
+		case "to_read":
+			return getMangasToRead();
+		case "in_progress":
+			return getMangasInProgress();
+		case "finished":
+			return getMangasFinished();
+		default:
+			return getMangasInProgress();
+		}
+
+	}
+
 	public List<Manga> getMangasToRead() {
 		return mangasToRead;
 	}

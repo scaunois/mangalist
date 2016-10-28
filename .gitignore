@@ -1,0 +1,22 @@
+#java specific
+*.class
+*/WEB-INF/classes/**
+*/bin/**
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*/public/**
+*/.settings/**
+.settings/**
+*/target/**
+target/**
+.project
+.classpath
+*/work/**
+work/**
+.gitignore
+/target/
