@@ -22,14 +22,24 @@
 	<section class="section_display_mangas">
 	
 	<%
+	
+	// Chargement des paramètres de la requête (url)
+	
 	String status = request.getParameter("status");
+	String style = request.getParameter("style");
+	
 	if(status == null) {
 		status = "to_read";
 	}
-	System.out.println("statut actuel : " + status);
+	
+	if(style == null) {
+		style = "all";
+	}
+	
 	MainSvc svc = new MainSvc();
 	svc.loadMangas();
 	List<Manga> mangasInCurrentStatus = svc.getMangas(status);
+	
 	%>
 	
 	<table>
@@ -59,7 +69,7 @@
 		Cette section te permet de gérer tes mangas. Tu peux :
 	</p>
 	<ul>
-		<li>Changer de catégorie pour voir uniquement tes mangas temrinés, en cours de lecture ou bien à commencer</li>
+		<li>Changer de catégorie pour voir uniquement tes mangas terminés, en cours de lecture ou bien à commencer</li>
 		<li>Filtrer selon le style pour n'afficher que les mangas d'un style particulier</li>
 		<li>Ajouter / Supprimer un manga</li>
 		<li>Rechercher un manga</li>
@@ -69,22 +79,49 @@
 
 	<p>
 		Catégorie :
-	</p>
-	<form action="mainpage.jsp" method="post">
-	
-		<select onchange="window.location.href='mainpage.jsp?status=' + this.value">
+	</p>	
+	<p>
+		<select id="select_status" onchange="reloadMainPage();">
 			<option value="to_read" <%if(status.equals("to_read")){%> selected="selected" <%}%> >A lire</option>
 			<option value="in_progress" <%if(status.equals("in_progress")){%> selected="selected" <%}%> >En cours de lecture</option>
 			<option value="finished" <%if(status.equals("finished")){%> selected="selected" <%}%> >Terminés</option>
 		</select>
+	</p>
 	
-	</form>
+	<p>
+		Filtrer par style (remarque : 'Tous les styles' affichera les mangas de n'importe quel style, tandis que 'Autres' affichera tous les mangas hors Josei/Smut/Yaoi) :
+	</p>
+	<p>
+		<select id="select_style" onchange="reloadMainPage();">		
+			<option value="all" <%if(style.equals("all")){%> selected="selected" <%}%> >Tous les styles</option>
+			<option value="josei" <%if(style.equals("josei")){%> selected="selected" <%}%> >JOSEI</option>
+			<option value="smut" <%if(style.equals("smut")){%> selected="selected" <%}%> >SMUT</option>
+			<option value="yaoi" <%if(style.equals("yaoi")){%> selected="selected" <%}%> >YAOI</option>
+			<option value="others" <%if(style.equals("others")){%> selected="selected" <%}%> >Autres</option>
+		</select>
+	</p>
 	
 	<p>zzzzzzzzzzzzzzzzzzzzzzz</p>
 	<p>zzzzzzzzzzzzzzzzzzzzzzz</p>
 
 	
 	</section>
+
+	<script>
+	
+	function reloadMainPage() {
+
+		var url = 'mainpage.jsp?';
+		url += 'status=' + document.getElementById('select_status').value;
+		url += '&style=' + document.getElementById('select_style').value;
+
+		alert('appel page ' + url);
+		
+		window.location.href = url;
+		
+	}
+		
+	</script>
 
 </body>
 </html>
