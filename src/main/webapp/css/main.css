@@ -12,5 +12,43 @@
 {
 	margin-left: 65%;
   	border: 2px solid black;
-  	padding: 1em;
+  	padding: 2px;
 }
+
+.section_filters
+{
+	border: 1px solid red;
+	margin: 1px;
+}
+
+.section_add
+{
+	border: 1px solid green;
+	margin: 1px;
+}
+
+.section_remove
+{
+	border: 1px solid pink;
+	margin: 1px;
+}
+
+.section_search
+{
+	border: 1px solid yellow;
+	margin: 1px;
+}
+
+form 
+{ 
+	display: table;      
+}
+
+label, input, select
+{
+	display: table-cell;
+}
+
+
+
+
