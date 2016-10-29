@@ -1,0 +1,13 @@
+
+.content {
+  float: left;
+  width: 60%;
+  border: 2px solid blue;
+}
+
+.menu {
+	
+  margin-left: 65%;
+  border: 2px solid red;
+  padding: 1em;
+}

@@ -12,7 +12,9 @@ import util.StatusUtil;
 
 public class MangaLister {
 
-	public static List<Manga> getMangas(String status) {
+	public static List<Manga> getMangas(String status, String style, Integer priority) {
+
+		System.out.println("status=" + status + " style=" + style + " priority=" + priority);
 
 		String path = StatusUtil.getPathFromStatus(status);
 
@@ -26,7 +28,11 @@ public class MangaLister {
 			while (line != null) {
 
 				Manga manga = getMangaFromLine(line);
-				list.add(manga);
+				if (style.equals("all") || manga.getStyle().equalsIgnoreCase(style)) {
+					if (priority == null || (priority != null && manga.getPriority() == priority)) {
+						list.add(manga);
+					}
+				}
 				line = br.readLine();
 
 			}

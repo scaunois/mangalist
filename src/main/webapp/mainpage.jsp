@@ -7,41 +7,52 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+	<%
+	
+	// Get parameters from the url
+	
+	String status = request.getParameter("status");
+	String style = request.getParameter("style");
+	String priority_str = request.getParameter("priority_str");
+	Integer priority = null;
+	
+	// Define default values
+	
+	if(status == null) {
+		status = "in_progress";
+	}
+
+	if(style == null) {
+		style = "all";
+	}
+	
+	if (priority_str != null && !priority_str.equals("all")) {
+		try {
+			priority = Integer.parseInt(priority_str);
+		} catch(NumberFormatException e) {
+			// 'priority' will keep its null value
+		}
+	}
+	
+	MainSvc svc = new MainSvc();
+	List<Manga> mangasInCurrentStatus = svc.getMangas(status, style, priority);
+	
+	%>
+	
 <!DOCTYPE html>
 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="/mangalist/css/main.css" />
 <title>Mangalist : gère tes mangas lus ou en cours !</title>
 <body>
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 
-	<!-- Section principale de la page. Affiche les mangas de la catgéorie souhaitée (finis, en cours...) -->
-	<section class="section_display_mangas">
-	
-	<%
-	
-	// Chargement des paramètres de la requête (url)
-	
-	String status = request.getParameter("status");
-	String style = request.getParameter("style");
-	
-	if(status == null) {
-		status = "to_read";
-	}
-	
-	if(style == null) {
-		style = "all";
-	}
-	
-	MainSvc svc = new MainSvc();
-	svc.loadMangas();
-	List<Manga> mangasInCurrentStatus = svc.getMangas(status);
-	
-	%>
-	
+	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
+	<div class="section_display_mangas">
+		
 	<table>
 	<tr>
 		<th>Titre</th>
@@ -60,11 +71,12 @@
 	<% } %>
 	</table>
 	
-	</section>
+	</div>
 	
-	<!-- Menu : contient les boutons et liens permettant de gérer la liste des mangas, d'en ajouter, supprimer,... -->
-	<section class="section_manage_mangas">
+	<!-- Management section : contains controls to manage the list of mangas, to add/remove a manga,... -->
+	<div class="section_manage_mangas">
 	
+	<!--
 	<p>
 		Cette section te permet de gérer tes mangas. Tu peux :
 	</p>
@@ -76,12 +88,11 @@
 		<li>Modifier les informations d'un manga</li>
 		<li>Déplacer un manga d'une catégorie à une autre</li>
 	</ul>
+	-->
 
 	<p>
-		Catégorie :
-	</p>	
-	<p>
-		<select id="select_status" onchange="reloadMainPage();">
+		<label for="select_status">Catégorie :</label>
+		<select id="select_status" onchange="reloadPage();">
 			<option value="to_read" <%if(status.equals("to_read")){%> selected="selected" <%}%> >A lire</option>
 			<option value="in_progress" <%if(status.equals("in_progress")){%> selected="selected" <%}%> >En cours de lecture</option>
 			<option value="finished" <%if(status.equals("finished")){%> selected="selected" <%}%> >Terminés</option>
@@ -89,10 +100,8 @@
 	</p>
 	
 	<p>
-		Filtrer par style (remarque : 'Tous les styles' affichera les mangas de n'importe quel style, tandis que 'Autres' affichera tous les mangas hors Josei/Smut/Yaoi) :
-	</p>
-	<p>
-		<select id="select_style" onchange="reloadMainPage();">		
+		<label for="select_style">Filtrer par style :</label>
+		<select id="select_style" onchange="reloadPage();">
 			<option value="all" <%if(style.equals("all")){%> selected="selected" <%}%> >Tous les styles</option>
 			<option value="josei" <%if(style.equals("josei")){%> selected="selected" <%}%> >JOSEI</option>
 			<option value="smut" <%if(style.equals("smut")){%> selected="selected" <%}%> >SMUT</option>
@@ -101,21 +110,36 @@
 		</select>
 	</p>
 	
-	<p>zzzzzzzzzzzzzzzzzzzzzzz</p>
-	<p>zzzzzzzzzzzzzzzzzzzzzzz</p>
+	<p>
+		<label for="select_priority">Filtrer par priorité :</label>
+		<select id="select_priority" onchange="reloadPage();">		
+			<option value="all" <%if(priority == null){%> selected="selected" <%}%> >Toutes les priorités</option>
+			<option value="0" <%if(priority != null && priority.equals(0)){%> selected="selected" <%}%> >0</option>
+			<option value="1" <%if(priority != null && priority.equals(1)){%> selected="selected" <%}%> >1</option>
+			<option value="2" <%if(priority != null && priority.equals(2)){%> selected="selected" <%}%> >2</option>
+			<option value="3" <%if(priority != null && priority.equals(3)){%> selected="selected" <%}%> >3</option>
+			<option value="4" <%if(priority != null && priority.equals(4)){%> selected="selected" <%}%> >4</option>
+			<option value="5" <%if(priority != null && priority.equals(5)){%> selected="selected" <%}%> >5</option>
+			<option value="6" <%if(priority != null && priority.equals(6)){%> selected="selected" <%}%> >6</option>
+			<option value="7" <%if(priority != null && priority.equals(7)){%> selected="selected" <%}%> >7</option>
+			<option value="8" <%if(priority != null && priority.equals(8)){%> selected="selected" <%}%> >8</option>
+			<option value="9" <%if(priority != null && priority.equals(9)){%> selected="selected" <%}%> >9</option>
+			<option value="10" <%if(priority != null && priority.equals(10)){%> selected="selected" <%}%> >10</option>
+		</select>
+	</p>
 
-	
-	</section>
+	</div>
 
 	<script>
 	
-	function reloadMainPage() {
+	function reloadPage() {
 
 		var url = 'mainpage.jsp?';
 		url += 'status=' + document.getElementById('select_status').value;
 		url += '&style=' + document.getElementById('select_style').value;
+		url += '&priority_str=' + document.getElementById('select_priority').value;
 
-		alert('appel page ' + url);
+		//alert('appel page ' + url);
 		
 		window.location.href = url;
 		

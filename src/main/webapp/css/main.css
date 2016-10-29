@@ -1,10 +1,16 @@
 
-.section_manage_mangas
-{
-	border: 1px solid red;
-}
-
 .section_display_mangas
 {
-	border: 1px solid blue;
+
+	float: left;
+  	width: 60%;
+  	border: 1px solid black;
+  
+}
+
+.section_manage_mangas
+{
+	margin-left: 65%;
+  	border: 2px solid black;
+  	padding: 1em;
 }

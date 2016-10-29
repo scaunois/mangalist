@@ -7,15 +7,17 @@ public class StatusUtil {
 		String path = null;
 
 		switch (status) {
-		case "IN_PROGRESS":
+		case "in_progress":
 			path = "C:/Users/Administrateur.000/Desktop/mangaList_inProgress.txt";
 			break;
-		case "FINISHED":
+		case "finished":
 			path = "C:/Users/Administrateur.000/Desktop/mangaList_finished.txt";
 			break;
-		case "TO_READ":
+		case "to_read":
 			path = "C:/Users/Administrateur.000/Desktop/mangaList_toRead.txt";
 			break;
+		default:
+			path = "C:/Users/Administrateur.000/Desktop/mangaList_inProgress.txt";
 		}
 
 		return path;
