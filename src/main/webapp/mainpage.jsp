@@ -36,9 +36,11 @@
 	System.out.println("status=" + status + " style=" + style + " priority=" + priority);
 	
 	MainSvc svc = new MainSvc();
-	List<Manga> mangasInCurrentStatus = svc.getMangas(status, style, priority);
+	List<Manga> mangas = svc.getMangas(status, style, priority);
 	
 	// if necessary (request = POST), add, remove or edit the manga
+	
+	// adds a manga
 	
 	if(request.getParameter("add_submit") != null) {
 		
@@ -46,17 +48,28 @@
 		String add_style = request.getParameter("add_style");
 		Integer add_priority = null;
 		try {
-			add_priority = Integer.parseInt(request.getParameter("add_priority"));
+	add_priority = Integer.parseInt(request.getParameter("add_priority"));
 		} catch(NumberFormatException e) {
-			e.printStackTrace();
+	e.printStackTrace();
 		}
 		
 		String add_status = request.getParameter("add_status");
 		System.out.println("requete d'ajout : title=" + add_title + " style=" + add_style + " priority=" + add_priority + " status=" + add_status);
-		svc.addManga(add_status, add_title, add_style, add_priority);
-		response.sendRedirect("mainpage.jsp");
+		if (!add_title.equals("") && !MangaLister.alreadyExists(mangas, add_title)) {
+			svc.addManga(add_status, add_title, add_style, add_priority);
+		}
+		response.sendRedirect("mainpage.jsp"); // reload the page to view changes
 	}
 	
+	// removes a manga	
+	
+	if(request.getParameter("remove_submit") != null) {
+		
+		String remove_title = request.getParameter("remove_title");
+		svc.removeManga(status, mangas, remove_title);
+		response.sendRedirect("mainpage.jsp");
+		
+	}
 %>
 
 <!DOCTYPE html>
@@ -76,12 +89,12 @@
 		<table>
 			<tr>
 				<th>Titre</th>
-				<th>Genre</th>
+				<th>Genre</mh>
 				<th>Chapitre</th>
 				<th>Priorité</th>
 			</tr>
 			<%
-				for(Manga m : mangasInCurrentStatus) {
+				for(Manga m : mangas) {
 			%>
 			<tr>
 				<td><%=m.getTitle()%></td>
@@ -147,8 +160,7 @@
 
 			<p>
 				<label for="select_priority">Filtrer par priorité :</label> <select
-					id="select_priority" name="priority"
-					onchange="reloadPage();">
+					id="select_priority" name="priority" onchange="reloadPage();">
 					<option value="all" <%if(priority == null){%> selected="selected"
 						<%}%>>Toutes les priorités</option>
 					<option value="0" <%if(priority != null && priority.equals(0)){%>
@@ -189,15 +201,16 @@
 					</label> <input type="text" id="add_title" name="add_title" size="30" />
 				</p>
 				<p>
-					<label for="add_style">Style :</label> <select id="add_style" name="add_style">
+					<label for="add_style">Style :</label> <select id="add_style"
+						name="add_style">
 						<option value="others" <%if(style.equals("others")){%>
-						selected="selected" <%}%>>Autres</option>
+							selected="selected" <%}%>>Autres</option>
 						<option value="josei" <%if(style.equals("josei")){%>
-						selected="selected" <%}%>>JOSEI</option>
+							selected="selected" <%}%>>JOSEI</option>
 						<option value="smut" <%if(style.equals("smut")){%>
-						selected="selected" <%}%>>SMUT</option>
+							selected="selected" <%}%>>SMUT</option>
 						<option value="yaoi" <%if(style.equals("yaoi")){%>
-						selected="selected" <%}%>>YAOI</option>
+							selected="selected" <%}%>>YAOI</option>
 					</select>
 				</p>
 				<p>
@@ -217,22 +230,22 @@
 					</select>
 				</p>
 				<p>
-					<label for="add_status">Catégorie</label>
-					<select id="add_status" name="add_status">
+					<label for="add_status">Catégorie</label> <select id="add_status"
+						name="add_status">
 						<option value="to_read" <%if(status.equals("to_read")){%>
-						selected="selected" <%}%>>A lire</option>
+							selected="selected" <%}%>>A lire</option>
 						<option value="in_progress" <%if(status.equals("in_progress")){%>
-						selected="selected" <%}%>>En cours de lecture</option>
+							selected="selected" <%}%>>En cours de lecture</option>
 						<option value="finished" <%if(status.equals("finished")){%>
-						selected="selected" <%}%>>Terminés</option>
+							selected="selected" <%}%>>Terminés</option>
 					</select>
 				</p>
 				<p>
 					<input name="add_submit" type="submit" value="Ajouter le manga" />
 				</p>
-				<input name="status" type="hidden" value="<%= status %>">
-				<input name="style" type="hidden" value="<%= style %>">
-				<input name="priority" type="hidden" value="<%= priority %>">
+				<input name="status" type="hidden" value="<%=status%>"> <input
+					name="style" type="hidden" value="<%=style%>"> <input
+					name="priority" type="hidden" value="<%=priority%>">
 			</form>
 
 		</div>
@@ -241,10 +254,14 @@
 
 			<h2>Supprimer un manga</h2>
 
-			<form>
+			<form action="mainpage.jsp" method="post">
 				<p>
 					<label for="remove_title">Titre :</label> <input id="remove_title"
-						type="text" size="30" />
+						name="remove_title" type="text" size="30" />
+				</p>
+				<p>
+					<input name="remove_submit" type="submit"
+						value="Supprimer le manga" />
 				</p>
 			</form>
 

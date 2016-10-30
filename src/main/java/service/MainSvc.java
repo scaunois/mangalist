@@ -26,4 +26,18 @@ public class MainSvc {
 
 	}
 
+	public void removeManga(String status, List<Manga> mangas, String title) {
+
+		Manga mangaToRemove = null;
+		for (Manga manga : mangas) {
+			if (manga.getTitle().equalsIgnoreCase(title.trim())) {
+				mangaToRemove = manga;
+			}
+		}
+		mangas.remove(mangaToRemove);
+
+		MangaSaver.saveList(mangas, status);
+
+	}
+
 }

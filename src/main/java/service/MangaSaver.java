@@ -63,4 +63,28 @@ public class MangaSaver {
 		}
 
 	}
+
+	public static void saveList(List<Manga> newList, String status) {
+
+		String path = StatusUtil.getPathFromStatus(status);
+
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
+			boolean isFirstLine = true;
+			for (Manga manga : newList) {
+				if (!isFirstLine) {
+					bw.newLine();
+				}
+				isFirstLine = false;
+				bw.append(manga.getTitle() + " | " + manga.getStyle() + " | " + manga.getPriority() + " | "
+						+ manga.getChapter());
+
+			}
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }
