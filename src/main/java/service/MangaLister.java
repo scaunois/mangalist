@@ -14,8 +14,6 @@ public class MangaLister {
 
 	public static List<Manga> getMangas(String status, String style, Integer priority) {
 
-		System.out.println("status=" + status + " style=" + style + " priority=" + priority);
-
 		String path = StatusUtil.getPathFromStatus(status);
 
 		List<Manga> list = new ArrayList<Manga>();

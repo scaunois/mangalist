@@ -33,8 +33,30 @@
 		}
 	}
 	
+	System.out.println("status=" + status + " style=" + style + " priority=" + priority);
+	
 	MainSvc svc = new MainSvc();
 	List<Manga> mangasInCurrentStatus = svc.getMangas(status, style, priority);
+	
+	// if necessary (request = POST), add, remove or edit the manga
+	
+	if(request.getParameter("add_submit") != null) {
+		
+		String add_title = request.getParameter("add_title");
+		String add_style = request.getParameter("add_style");
+		Integer add_priority = null;
+		try {
+			add_priority = Integer.parseInt(request.getParameter("add_priority"));
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+		}
+		
+		String add_status = request.getParameter("add_status");
+		System.out.println("requete d'ajout : title=" + add_title + " style=" + add_style + " priority=" + add_priority + " status=" + add_status);
+		svc.addManga(add_status, add_title, add_style, add_priority);
+		response.sendRedirect("mainpage.jsp");
+	}
+	
 %>
 
 <!DOCTYPE html>
@@ -97,7 +119,7 @@
 
 			<p>
 				<label for="select_status">Catégorie :</label> <select
-					id="select_status" onchange="reloadPage();">
+					id="select_status" name="status" onchange="reloadPage();">
 					<option value="to_read" <%if(status.equals("to_read")){%>
 						selected="selected" <%}%>>A lire</option>
 					<option value="in_progress" <%if(status.equals("in_progress")){%>
@@ -109,7 +131,7 @@
 
 			<p>
 				<label for="select_style">Filtrer par style :</label> <select
-					id="select_style" onchange="reloadPage();">
+					id="select_style" name="style" onchange="reloadPage();">
 					<option value="all" <%if(style.equals("all")){%>
 						selected="selected" <%}%>>Tous les styles</option>
 					<option value="josei" <%if(style.equals("josei")){%>
@@ -125,7 +147,8 @@
 
 			<p>
 				<label for="select_priority">Filtrer par priorité :</label> <select
-					id="select_priority" onchange="reloadPage();">
+					id="select_priority" name="priority"
+					onchange="reloadPage();">
 					<option value="all" <%if(priority == null){%> selected="selected"
 						<%}%>>Toutes les priorités</option>
 					<option value="0" <%if(priority != null && priority.equals(0)){%>
@@ -158,46 +181,85 @@
 		<div class="section_add">
 
 			<h2>Ajouter un manga</h2>
-			
-			<form>
-				<label for="add_title">Titre (<strong>obligatoire</strong>) :</label>
-				<input type="text" id="add_title" size="30"> <br/>
-				<label for="add_style">Style :</label>
-				<select id="add_style">
-					<option value="">Choisir une valeur</option>
-					<option value="josei">JOSEI</option>
-					<option value="smut">SMUT</option>
-					<option value="yaoi">YAOI</option>
-					<option value="others">Autres</option>
-				</select> <br/>
-				<label for="add_priority">Priorité :</label>
-				<select id="add_priority">
-					<option value="">Choisir une valeur</option>
-					<option value="0">0</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-				</select>
+
+			<form action="mainpage.jsp" method="post">
+				<p>
+					<label for="add_title">Titre (<strong>obligatoire</strong>)
+						:
+					</label> <input type="text" id="add_title" name="add_title" size="30" />
+				</p>
+				<p>
+					<label for="add_style">Style :</label> <select id="add_style" name="add_style">
+						<option value="others" <%if(style.equals("others")){%>
+						selected="selected" <%}%>>Autres</option>
+						<option value="josei" <%if(style.equals("josei")){%>
+						selected="selected" <%}%>>JOSEI</option>
+						<option value="smut" <%if(style.equals("smut")){%>
+						selected="selected" <%}%>>SMUT</option>
+						<option value="yaoi" <%if(style.equals("yaoi")){%>
+						selected="selected" <%}%>>YAOI</option>
+					</select>
+				</p>
+				<p>
+					<label for="add_priority">Priorité :</label> <select
+						id="add_priority" name="add_priority">
+						<option value="0" selected="selected">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+					</select>
+				</p>
+				<p>
+					<label for="add_status">Catégorie</label>
+					<select id="add_status" name="add_status">
+						<option value="to_read" <%if(status.equals("to_read")){%>
+						selected="selected" <%}%>>A lire</option>
+						<option value="in_progress" <%if(status.equals("in_progress")){%>
+						selected="selected" <%}%>>En cours de lecture</option>
+						<option value="finished" <%if(status.equals("finished")){%>
+						selected="selected" <%}%>>Terminés</option>
+					</select>
+				</p>
+				<p>
+					<input name="add_submit" type="submit" value="Ajouter le manga" />
+				</p>
+				<input name="status" type="hidden" value="<%= status %>">
+				<input name="style" type="hidden" value="<%= style %>">
+				<input name="priority" type="hidden" value="<%= priority %>">
 			</form>
 
 		</div>
-		
+
 		<div class="section_remove">
 
 			<h2>Supprimer un manga</h2>
 
+			<form>
+				<p>
+					<label for="remove_title">Titre :</label> <input id="remove_title"
+						type="text" size="30" />
+				</p>
+			</form>
+
 		</div>
-		
+
 		<div class="section_search">
 
 			<h2>Recherche</h2>
+
+			<form>
+				<p>
+					<label for="search_title">Titre :</label> <input id="search_title"
+						type="text" size="30" />
+				</p>
+			</form>
 
 		</div>
 

@@ -7,9 +7,9 @@ public class Manga implements Comparable<Manga> {
 	private Integer priority;
 	private Integer chapter;
 
-	public Manga(String name) {
+	public Manga(String title) {
 
-		this.title = name;
+		this.title = title;
 		this.style = "Autres"; // valeur défaut, écrasée plus tard
 		this.priority = 0; // valeur défaut, écrasée plus tard
 		this.chapter = 1; // valeur défaut, écrasée plus tard

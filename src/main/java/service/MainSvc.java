@@ -16,4 +16,14 @@ public class MainSvc {
 
 	}
 
+	public void addManga(String status, String title, String style, Integer priority) {
+
+		Manga manga = new Manga(title);
+		manga.setStyle(style);
+		manga.setPriority(priority);
+
+		MangaSaver.saveManga(manga, status);
+
+	}
+
 }

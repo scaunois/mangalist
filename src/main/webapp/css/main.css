@@ -39,9 +39,14 @@
 	margin: 1px;
 }
 
-form 
+form
 { 
-	display: table;      
+	display: table;
+}
+
+form p, .section_filters p
+{
+	display: table-row;
 }
 
 label, input, select
