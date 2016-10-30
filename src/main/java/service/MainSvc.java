@@ -40,4 +40,36 @@ public class MainSvc {
 
 	}
 
+	public String searchManga(String title) {
+
+		// if the manga is found, returns the status in which it was found, else
+		// returns "not_found"
+		String res = "not_found";
+
+		List<Manga> mangasToRead = getMangas("to_read", "all", null);
+		List<Manga> mangasInProgress = getMangas("in_progress", "all", null);
+		List<Manga> mangasFinished = getMangas("finished", "all", null);
+
+		for (Manga m : mangasToRead) {
+			if (m.getTitle().equalsIgnoreCase(title.trim())) {
+				res = "to_read";
+			}
+		}
+
+		for (Manga m : mangasInProgress) {
+			if (m.getTitle().equalsIgnoreCase(title.trim())) {
+				res = "in_progress";
+			}
+		}
+
+		for (Manga m : mangasFinished) {
+			if (m.getTitle().equalsIgnoreCase(title.trim())) {
+				res = "finished";
+			}
+		}
+
+		return res;
+
+	}
+
 }

@@ -7,71 +7,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
-<%
-	// Get parameters from the url
-	
-	String status = request.getParameter("status");
-	String style = request.getParameter("style");
-	String priority_str = request.getParameter("priority_str");
-	Integer priority = null;
-	
-	// Define default values
-	
-	if(status == null) {
-		status = "in_progress";
-	}
-
-	if(style == null) {
-		style = "all";
-	}
-	
-	if (priority_str != null && !priority_str.equals("all")) {
-		try {
-	priority = Integer.parseInt(priority_str);
-		} catch(NumberFormatException e) {
-	// 'priority' will keep its null value
-		}
-	}
-	
-	System.out.println("status=" + status + " style=" + style + " priority=" + priority);
-	
-	MainSvc svc = new MainSvc();
-	List<Manga> mangas = svc.getMangas(status, style, priority);
-	
-	// if necessary (request = POST), add, remove or edit the manga
-	
-	// adds a manga
-	
-	if(request.getParameter("add_submit") != null) {
-		
-		String add_title = request.getParameter("add_title");
-		String add_style = request.getParameter("add_style");
-		Integer add_priority = null;
-		try {
-	add_priority = Integer.parseInt(request.getParameter("add_priority"));
-		} catch(NumberFormatException e) {
-	e.printStackTrace();
-		}
-		
-		String add_status = request.getParameter("add_status");
-		System.out.println("requete d'ajout : title=" + add_title + " style=" + add_style + " priority=" + add_priority + " status=" + add_status);
-		if (!add_title.equals("") && !MangaLister.alreadyExists(mangas, add_title)) {
-			svc.addManga(add_status, add_title, add_style, add_priority);
-		}
-		response.sendRedirect("mainpage.jsp"); // reload the page to view changes
-	}
-	
-	// removes a manga	
-	
-	if(request.getParameter("remove_submit") != null) {
-		
-		String remove_title = request.getParameter("remove_title");
-		svc.removeManga(status, mangas, remove_title);
-		response.sendRedirect("mainpage.jsp");
-		
-	}
-%>
-
 <!DOCTYPE html>
 
 <html>
@@ -81,6 +16,84 @@
 <title>Mangalist : gère tes mangas lus ou en cours !</title>
 <body>
 
+<%
+	// Get parameters from the url
+
+	String status = request.getParameter("status");
+	String style = request.getParameter("style");
+	String priority_str = request.getParameter("priority_str");
+	Integer priority = null;
+
+	// Define default values
+
+	if (status == null) {
+		status = "in_progress";
+	}
+
+	if (style == null) {
+		style = "all";
+	}
+
+	if (priority_str != null && !priority_str.equals("all")) {
+		try {
+			priority = Integer.parseInt(priority_str);
+		} catch (NumberFormatException e) {
+			// 'priority' will keep its null value
+		}
+	}
+
+	System.out.println("status=" + status + " style=" + style + " priority=" + priority);
+
+	MainSvc svc = new MainSvc();
+	List<Manga> mangas = svc.getMangas(status, style, priority);
+
+	// if necessary (request = POST), add, remove or edit the manga
+
+	// adds a manga
+
+	if (request.getParameter("add_submit") != null) {
+
+		String add_title = request.getParameter("add_title");
+		String add_style = request.getParameter("add_style");
+		Integer add_priority = null;
+		try {
+			add_priority = Integer.parseInt(request.getParameter("add_priority"));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		String add_status = request.getParameter("add_status");
+		System.out.println("requete d'ajout : title=" + add_title + " style=" + add_style + " priority="
+				+ add_priority + " status=" + add_status);
+		if (!add_title.equals("") && !MangaLister.alreadyExists(mangas, add_title)) {
+			svc.addManga(add_status, add_title, add_style, add_priority);
+		}
+		response.sendRedirect("mainpage.jsp"); // reload the page to view changes
+	}
+
+	// removes a manga	
+
+	if (request.getParameter("remove_submit") != null) {
+
+		String remove_title = request.getParameter("remove_title");
+		svc.removeManga(status, mangas, remove_title);
+		response.sendRedirect("mainpage.jsp");
+
+	}
+
+	// search a manga
+
+	String search_title = null;
+	String search_result = null;
+	if (request.getParameter("search_submit") != null) {
+
+		search_title = request.getParameter("search_title");
+		search_result = svc.searchManga(search_title);
+		System.out.println("vérification existence du manga [" + search_title + "] : [" + search_result + "]");
+
+	}
+%>
+
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
@@ -89,7 +102,7 @@
 		<table>
 			<tr>
 				<th>Titre</th>
-				<th>Genre</mh>
+				<th>Genre</th>
 				<th>Chapitre</th>
 				<th>Priorité</th>
 			</tr>
@@ -98,7 +111,7 @@
 			%>
 			<tr>
 				<td><%=m.getTitle()%></td>
-				<td><%=m.getStyle()%></td>
+				<td><%=m.getStyle().replace("others", "Autres")%></td>
 				<td><%=m.getChapter()%></td>
 				<td><%=m.getPriority()%></td>
 			</tr>
@@ -271,10 +284,14 @@
 
 			<h2>Recherche</h2>
 
-			<form>
+			<form action="mainpage.jsp" method="post">
 				<p>
 					<label for="search_title">Titre :</label> <input id="search_title"
-						type="text" size="30" />
+						name="search_title" type="text" size="30" />
+				</p>
+				<p>
+					<input name="search_submit" type="submit"
+						value="Chercher" />
 				</p>
 			</form>
 
@@ -282,6 +299,32 @@
 
 
 	</div>
+	
+	<% 
+	if (request.getParameter("search_submit") != null) {
+		
+		System.out.println("ici");
+		
+		if(!search_result.equals("not_found")) {
+			String search_result_FRENCH = null;
+			if(search_result.equals("to_read")) {
+				search_result_FRENCH = "A lire";
+			} else if(search_result.equals("in_progress")) {
+				search_result_FRENCH = "En cours de lecture";
+			} else if(search_result.equals("finished")) {
+				search_result_FRENCH = "Terminés";
+			}
+			System.out.println("ici 2");
+			%>
+			<script>alert("Le manga [ <%= search_title %> ] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
+	<% 
+		} else { %>
+			<script>alert("Le manga [ + <%= search_title %> + ] n'existe pas. Tu peux le créer ! ^_^");</script>
+	<%
+		}
+		
+	}
+	%>
 
 	<script>
 		function reloadPage() {
