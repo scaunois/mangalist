@@ -136,8 +136,8 @@
 				<th>Genre</th>
 				<th>Chapitre</th>
 				<th>Priorité</th>
-<!-- 				<th>Marquer comme terminé</th> -->
-<!-- 				<th>Marquer comme commencé</th> -->
+				<th></th>
+				<th></th>
 			</tr>
 			<%
 				for(Manga m : mangas) {
@@ -147,8 +147,8 @@
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
 				<td><%=m.getChapter()%></td>
 				<td><%=m.getPriority()%></td>
-				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Marquer comme terminé</a></td> <% } %>
-				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Marquer comme commencé</a></td> <% } %>
+				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Terminé</a></td> <% } %>
+				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Commencé</a></td> <% } %>
 			</tr>
 			<%
 				}

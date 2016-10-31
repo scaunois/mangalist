@@ -1,10 +1,18 @@
 
+body
+{
+	background-color:#313b3f;
+	color: #9ba5ac;
+}
+
 .section_display_mangas
 {
 
 	float: left;
   	width: 60%;
-  	border: 1px solid black;
+  	/*border: 1px solid black;*/
+  	
+  	font-family: Verdana;
   
 }
 
@@ -39,6 +47,24 @@
 	margin: 1px;
 }
 
+table
+{
+	border-collapse: collapse;
+}
+
+th
+{
+	border-bottom : medium solid;
+	text-align: left;
+	padding: 5px 10px;
+}
+
+td {
+    border-top: thin solid; 
+    border-bottom: thin solid;
+	padding: 5px 10px;
+}
+
 form
 { 
 	display: table;
@@ -54,6 +80,9 @@ label, input, select
 	display: table-cell;
 }
 
-
+a
+{
+	color: #9ba5ac;
+}
 
 
