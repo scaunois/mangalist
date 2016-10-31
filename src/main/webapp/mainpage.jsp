@@ -92,6 +92,20 @@
 		System.out.println("vérification existence du manga [" + search_title + "] : [" + search_result + "]");
 
 	}
+	
+	// controls if a button to change the status of a manga should be present or not
+	String button_move_to_in_progress = "";
+	String button_move_to_finished = "";
+	
+	if(status.equals("to_read")) {
+		button_move_to_in_progress = "<td><input type='submit' name='submit_move_to_in_progress' value='Marquer comme commencé' /></td>";
+		button_move_to_finished = "<td><input type='submit' name='submit_move_to_finished' value='Marquer comme terminé' /></td>";
+	}
+	if(status.equals("in_progress")) {
+		button_move_to_finished = "<td><input type='submit' name='submit_move_to_finished' value='Marquer comme terminé' /></td>";
+	}
+	
+	
 %>
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
@@ -105,6 +119,8 @@
 				<th>Genre</th>
 				<th>Chapitre</th>
 				<th>Priorité</th>
+<!-- 				<th>Marquer comme terminé</th> -->
+<!-- 				<th>Marquer comme commencé</th> -->
 			</tr>
 			<%
 				for(Manga m : mangas) {
@@ -114,6 +130,8 @@
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
 				<td><%=m.getChapter()%></td>
 				<td><%=m.getPriority()%></td>
+				<%= button_move_to_finished %>
+				<%= button_move_to_in_progress %>
 			</tr>
 			<%
 				}
@@ -316,10 +334,10 @@
 			}
 			System.out.println("ici 2");
 			%>
-			<script>alert("Le manga [ <%= search_title %> ] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
+			<script>alert("Le manga [<%= search_title.trim() %>] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
 	<% 
 		} else { %>
-			<script>alert("Le manga [ + <%= search_title %> + ] n'existe pas. Tu peux le créer ! ^_^");</script>
+			<script>alert("Le manga [<%= search_title %>] n'existe pas. Tu peux le créer ! ^_^");</script>
 	<%
 		}
 		
