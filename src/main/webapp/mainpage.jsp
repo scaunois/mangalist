@@ -94,15 +94,31 @@
 	}
 	
 	// controls if a button to change the status of a manga should be present or not
-	String button_move_to_in_progress = "";
-	String button_move_to_finished = "";
+	boolean button_move_to_in_progress = false;
+	boolean button_move_to_finished = false;
 	
 	if(status.equals("to_read")) {
-		button_move_to_in_progress = "<td><input type='submit' name='submit_move_to_in_progress' value='Marquer comme commencé' /></td>";
-		button_move_to_finished = "<td><input type='submit' name='submit_move_to_finished' value='Marquer comme terminé' /></td>";
+		button_move_to_in_progress = true;
+		button_move_to_finished = true;
 	}
 	if(status.equals("in_progress")) {
-		button_move_to_finished = "<td><input type='submit' name='submit_move_to_finished' value='Marquer comme terminé' /></td>";
+		button_move_to_finished = true;
+	}
+	
+	// change the status of a manga
+	String move_title = request.getParameter("move_title"); 
+	if(move_title != null) {
+		String move_style = request.getParameter("move_style");
+		String move_priority = request.getParameter("move_priority");
+		String move_chapter = request.getParameter("move_chapter");
+		String new_status = request.getParameter("new_status");
+		System.out.println("move_title=" + move_title + " new_status=" + new_status);
+		Manga m = new Manga(move_title);
+		m.setStyle(move_style);
+		m.setPriority(Integer.parseInt(move_priority));
+		m.setChapter(Integer.parseInt(move_chapter));
+		svc.changeStatusOfManga(mangas, m, status, new_status);
+		response.sendRedirect("mainpage.jsp");
 	}
 	
 	
@@ -112,6 +128,8 @@
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
 	<div class="section_display_mangas">
+	
+		<form action='mainpage.jsp' method='post'>
 
 		<table>
 			<tr>
@@ -130,13 +148,15 @@
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
 				<td><%=m.getChapter()%></td>
 				<td><%=m.getPriority()%></td>
-				<%= button_move_to_finished %>
-				<%= button_move_to_in_progress %>
+				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=style%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Marquer comme terminé</a></td> <% } %>
+				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=style%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Marquer comme commencé</a></td> <% } %>
 			</tr>
 			<%
 				}
 			%>
 		</table>
+		
+		</form>
 
 	</div>
 

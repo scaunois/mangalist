@@ -72,4 +72,11 @@ public class MainSvc {
 
 	}
 
+	public void changeStatusOfManga(List<Manga> mangas, Manga m, String old_status, String new_status) {
+
+		removeManga(old_status, mangas, m.getTitle());
+		MangaSaver.saveManga(m, new_status);
+
+	}
+
 }
