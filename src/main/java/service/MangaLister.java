@@ -26,7 +26,8 @@ public class MangaLister {
 			while (line != null) {
 
 				Manga manga = getMangaFromLine(line);
-				if (style.equals("all") || manga.getStyle().equalsIgnoreCase(style)) {
+				if (style.equals("all") || manga.getStyle().equalsIgnoreCase(style)
+						|| (manga.getStyle().equalsIgnoreCase("autres") && style.equals("others"))) {
 					if (priority == null || (priority != null && manga.getPriority() == priority)) {
 						list.add(manga);
 					}
@@ -71,9 +72,7 @@ public class MangaLister {
 			manga.setPriority(Integer.parseInt(tab[2].trim()));
 			manga.setChapter(Integer.parseInt(tab[3].trim()));
 		} catch (Exception e) {
-			System.err
-					.println("erreur (totale ou partielle) lors de la lecture de la ligne du fichier correspondant au manga "
-							+ manga.getTitle());
+			System.err.println("erreur (totale ou partielle) lors de la lecture de la ligne du fichier correspondant au manga " + manga.getTitle());
 			// e.printStackTrace();
 		}
 

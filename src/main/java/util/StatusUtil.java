@@ -8,16 +8,16 @@ public class StatusUtil {
 
 		switch (status) {
 		case "in_progress":
-			path = "C:/Users/Administrateur.000/Desktop/mangaList_inProgress.txt";
+			path = "C:/mangalist/mangaList_inProgress.txt";
 			break;
 		case "finished":
-			path = "C:/Users/Administrateur.000/Desktop/mangaList_finished.txt";
+			path = "C:/mangalist/mangaList_finished.txt";
 			break;
 		case "to_read":
-			path = "C:/Users/Administrateur.000/Desktop/mangaList_toRead.txt";
+			path = "C:/mangalist/mangaList_toRead.txt";
 			break;
 		default:
-			path = "C:/Users/Administrateur.000/Desktop/mangaList_inProgress.txt";
+			path = "C:/mangalist/mangaList_inProgress.txt";
 		}
 
 		return path;
