@@ -92,43 +92,12 @@
 		System.out.println("vérification existence du manga [" + search_title + "] : [" + search_result + "]");
 
 	}
-	
-	// controls if a button to change the status of a manga should be present or not
-	boolean button_move_to_in_progress = false;
-	boolean button_move_to_finished = false;
-	
-	if(status.equals("to_read")) {
-		button_move_to_in_progress = true;
-		button_move_to_finished = true;
-	}
-	if(status.equals("in_progress")) {
-		button_move_to_finished = true;
-	}
-	
-	// change the status of a manga
-	String move_title = request.getParameter("move_title"); 
-	if(move_title != null) {
-		String move_style = request.getParameter("move_style");
-		String move_priority = request.getParameter("move_priority");
-		String move_chapter = request.getParameter("move_chapter");
-		String new_status = request.getParameter("new_status");
-		System.out.println("move_title=" + move_title + " new_status=" + new_status);
-		Manga m = new Manga(move_title);
-		m.setStyle(move_style);
-		m.setPriority(Integer.parseInt(move_priority));
-		m.setChapter(Integer.parseInt(move_chapter));
-		svc.changeStatusOfManga(mangas, m, status, new_status);
-		response.sendRedirect("mainpage.jsp");
-	}
-	
 %>
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
 	<div class="section_display_mangas">
-	
-		<form action='mainpage.jsp' method='post'>
 
 		<table>
 			<tr>
@@ -136,8 +105,6 @@
 				<th>Genre</th>
 				<th>Chapitre</th>
 				<th>Priorité</th>
-				<th></th>
-				<th></th>
 			</tr>
 			<%
 				for(Manga m : mangas) {
@@ -147,15 +114,11 @@
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
 				<td><%=m.getChapter()%></td>
 				<td><%=m.getPriority()%></td>
-				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Terminé</a></td> <% } %>
-				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Commencé</a></td> <% } %>
 			</tr>
 			<%
 				}
 			%>
 		</table>
-		
-		</form>
 
 	</div>
 
@@ -353,10 +316,10 @@
 			}
 			System.out.println("ici 2");
 			%>
-			<script>alert("Le manga [<%= search_title.trim() %>] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
+			<script>alert("Le manga [ <%= search_title %> ] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
 	<% 
 		} else { %>
-			<script>alert("Le manga [<%= search_title %>] n'existe pas. Tu peux le créer ! ^_^");</script>
+			<script>alert("Le manga [ + <%= search_title %> + ] n'existe pas. Tu peux le créer ! ^_^");</script>
 	<%
 		}
 		
