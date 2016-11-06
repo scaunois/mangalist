@@ -72,7 +72,9 @@ public class MangaLister {
 			manga.setPriority(Integer.parseInt(tab[2].trim()));
 			manga.setChapter(Integer.parseInt(tab[3].trim()));
 		} catch (Exception e) {
-			System.err.println("erreur (totale ou partielle) lors de la lecture de la ligne du fichier correspondant au manga " + manga.getTitle());
+			System.err
+					.println("erreur (totale ou partielle) lors de la lecture de la ligne du fichier correspondant au manga "
+							+ manga.getTitle());
 			// e.printStackTrace();
 		}
 
@@ -85,7 +87,7 @@ public class MangaLister {
 		boolean res = false;
 
 		for (Manga manga : mangas) {
-			if (manga.getTitle().equals(name)) {
+			if (manga.getTitle().trim().equalsIgnoreCase(name)) {
 				res = true;
 			}
 		}

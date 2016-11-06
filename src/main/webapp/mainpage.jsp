@@ -92,12 +92,43 @@
 		System.out.println("vérification existence du manga [" + search_title + "] : [" + search_result + "]");
 
 	}
+	
+	// controls if a button to change the status of a manga should be present or not
+	boolean button_move_to_in_progress = false;
+	boolean button_move_to_finished = false;
+	
+	if(status.equals("to_read")) {
+		button_move_to_in_progress = true;
+		button_move_to_finished = true;
+	}
+	if(status.equals("in_progress")) {
+		button_move_to_finished = true;
+	}
+	
+	// change the status of a manga
+	String move_title = request.getParameter("move_title"); 
+	if(move_title != null) {
+		String move_style = request.getParameter("move_style");
+		String move_priority = request.getParameter("move_priority");
+		String move_chapter = request.getParameter("move_chapter");
+		String new_status = request.getParameter("new_status");
+		System.out.println("move_title=" + move_title + " new_status=" + new_status);
+		Manga m = new Manga(move_title);
+		m.setStyle(move_style);
+		m.setPriority(Integer.parseInt(move_priority));
+		m.setChapter(Integer.parseInt(move_chapter));
+		svc.changeStatusOfManga(mangas, m, status, new_status);
+		response.sendRedirect("mainpage.jsp");
+	}
+	
 %>
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
 	<div class="section_display_mangas">
+	
+		<form action='mainpage.jsp' method='post'>
 
 		<table>
 			<tr>
@@ -105,20 +136,28 @@
 				<th>Genre</th>
 				<th>Chapitre</th>
 				<th>Priorité</th>
+				<th></th>
+				<th></th>
 			</tr>
 			<%
+				int i = 0;
 				for(Manga m : mangas) {
+					i++;
 			%>
 			<tr>
 				<td><%=m.getTitle()%></td>
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
-				<td><%=m.getChapter()%></td>
+				<td><label id="label_chapter_<%=i%>" onclick="changeLabelToInput(this.id, <%=i%>)"><%=m.getChapter()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
 				<td><%=m.getPriority()%></td>
+				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Terminé</a></td> <% } %>
+				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Commencé</a></td> <% } %>
 			</tr>
 			<%
 				}
 			%>
 		</table>
+		
+		</form>
 
 	</div>
 
@@ -316,10 +355,10 @@
 			}
 			System.out.println("ici 2");
 			%>
-			<script>alert("Le manga [ <%= search_title %> ] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
+			<script>alert("Le manga [<%= search_title.trim() %>] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
 	<% 
 		} else { %>
-			<script>alert("Le manga [ + <%= search_title %> + ] n'existe pas. Tu peux le créer ! ^_^");</script>
+			<script>alert("Le manga [<%= search_title %>] n'existe pas. Tu peux le créer ! ^_^");</script>
 	<%
 		}
 		
@@ -327,19 +366,50 @@
 	%>
 
 	<script>
-		function reloadPage() {
 
-			var url = 'mainpage.jsp?';
-			url += 'status=' + document.getElementById('select_status').value;
-			url += '&style=' + document.getElementById('select_style').value;
-			url += '&priority_str='
-					+ document.getElementById('select_priority').value;
+	function reloadPage() {
 
-			//alert('appel page ' + url);
+		var url = 'mainpage.jsp?';
+		url += 'status=' + document.getElementById('select_status').value;
+		url += '&style=' + document.getElementById('select_style').value;
+		url += '&priority_str=' + document.getElementById('select_priority').value;
 
-			window.location.href = url;
+		//alert('appel page ' + url);
 
+		window.location.href = url;
+
+	}
+
+	function changeLabelToInput(id, i) {
+		console.log('cliqué le label ' + id);
+		var label = document.getElementById(id);
+		console.log(label);
+		var input = document.createElement('input');
+		input.id = 'input_chapter_' + i;
+		input.setAttribute("onblur", "changeInputToLabel('" + input.id + "', '" +  i + "')");
+		label.parentNode.replaceChild(input, label);
+		input.focus();
+	}
+
+	function changeInputToLabel(id, i) {
+		console.log('quitté l\'input ' + id);
+		var input = document.getElementById(id);
+		var label = document.createElement('label');
+		label.id = 'label_chapter_' + i;
+		var chapter;
+		if(input.value == '') {
+			chapter = '0' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		} else {
+			chapter = input.value + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
+		label.innerHTML = chapter;
+		label.setAttribute("onclick", "changeLabelToInput('" + label.id + "', '" + i + "')");
+		input.parentNode.replaceChild(label, input);
+		<%
+			
+		%>
+	}
+
 	</script>
 
 </body>
