@@ -64,8 +64,9 @@ public class MangaLister {
 
 	private static Manga getMangaFromLine(String line) {
 
-		String[] tab = line.split("\\|"); // tab [name, style, priority,
-											// chapter]
+		String[] tab = line.split("\\|");
+
+		// System.out.println(line + " --> " + Arrays.toString(tab));
 		Manga manga = new Manga(tab[0].trim());
 		try {
 			manga.setStyle(tab[1].trim());
@@ -75,7 +76,7 @@ public class MangaLister {
 			System.err
 					.println("erreur (totale ou partielle) lors de la lecture de la ligne du fichier correspondant au manga "
 							+ manga.getTitle());
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return manga;

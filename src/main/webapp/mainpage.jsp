@@ -42,8 +42,6 @@
 		}
 	}
 
-	System.out.println("status=" + status + " style=" + style + " priority=" + priority);
-
 	MainSvc svc = new MainSvc();
 	List<Manga> mangas = svc.getMangas(status, style, priority);
 
@@ -147,7 +145,10 @@
 			<tr>
 				<td><%=m.getTitle()%></td>
 				<td><%=m.getStyle().replace("others", "Autres")%></td>
-				<td><label id="label_chapter_<%=i%>" onclick="changeLabelToInput(this.id, <%=i%>)"><%=m.getChapter()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
+				<td><label id="label_chapter_<%=i%>" onclick="changeLabelToInput(this.id, <%=i%>)"><%=m.getChapter()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<input type="hidden" id="hidden_title_<%=i%>" value="<%=m.getTitle()%>" />
+				<input type="hidden" id="hidden_style_<%=i%>" value="<%=m.getStyle()%>" />
+				<input type="hidden" id="hidden_priority_<%=i%>" value="<%=m.getPriority()%>" /></td>
 				<td><%=m.getPriority()%></td>
 				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Terminé</a></td> <% } %>
 				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Commencé</a></td> <% } %>
@@ -397,17 +398,24 @@
 		var label = document.createElement('label');
 		label.id = 'label_chapter_' + i;
 		var chapter;
-		if(input.value == '') {
-			chapter = '0' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		if(input.value == '' || !parseInt(input.value)) {
+			chapter = '1' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		} else {
 			chapter = input.value + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
 		label.innerHTML = chapter;
 		label.setAttribute("onclick", "changeLabelToInput('" + label.id + "', '" + i + "')");
 		input.parentNode.replaceChild(label, input);
-		<%
-			
-		%>
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'controller_ajax?i=' + i
+				+ '&status=<%=status%>'
+				+ '&hidden_title_' + i + '=' + document.getElementById('hidden_title_' + i).value
+				+ '&hidden_style_' + i + '=' + document.getElementById('hidden_style_' + i).value
+				+ '&hidden_priority_' + i + '=' + document.getElementById('hidden_priority_' + i).value
+				+ '&chapter=' + chapter
+		);
+		xhr.send(null);
 	}
 
 	</script>

@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import mvc.model.Manga;
@@ -18,8 +19,15 @@ public class MainSvc {
 
 	public void addManga(String status, String title, String style, Integer priority) {
 
+		addManga(status, title, style, null, priority);
+
+	}
+
+	public void addManga(String status, String title, String style, Integer chapter, Integer priority) {
+
 		Manga manga = new Manga(title);
 		manga.setStyle(style);
+		manga.setChapter(chapter);
 		manga.setPriority(priority);
 
 		MangaSaver.saveManga(manga, status);
@@ -76,6 +84,18 @@ public class MainSvc {
 
 		removeManga(old_status, mangas, m.getTitle());
 		MangaSaver.saveManga(m, new_status);
+
+	}
+
+	public void changeChapterOfManga(String status, List<Manga> mangas, Manga m, Integer new_chapter) {
+
+		System.out.println("status=" + status);
+		System.out.println("mangas :\n" + Arrays.toString(mangas.toArray()));
+		System.out.println("manga : " + m.toString2());
+		System.out.println("new_chapter=" + new_chapter);
+
+		removeManga(status, mangas, m.getTitle());
+		addManga(status, m.getTitle(), m.getStyle(), m.getChapter(), m.getPriority());
 
 	}
 
