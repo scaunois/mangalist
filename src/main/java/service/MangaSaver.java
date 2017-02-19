@@ -16,7 +16,11 @@ public class MangaSaver {
 
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(path, true));
-			bw.newLine();
+			boolean isFirstLine = true;
+			if (!isFirstLine) {
+				bw.newLine();
+			}
+			isFirstLine = false;
 			bw.append(manga.getTitle() + (manga.getStyle() != null ? " | " + manga.getStyle() : "")
 					+ (manga.getPriority() != null ? " | " + manga.getPriority() : "")
 					+ (manga.getChapter() != null ? " | " + manga.getChapter() : ""));
@@ -28,12 +32,12 @@ public class MangaSaver {
 	}
 
 	/**
-	 * REMARQUE : il faut passer en parametre la liste SANS le fichier à
+	 * REMARQUE : il faut passer en parametre la liste SANS le fichier ï¿½
 	 * supprimer, i.e. il faut d'abord le supprimer puis passer la liste en
 	 * parametre.
 	 * 
 	 * @param newList
-	 *            : la liste des mangas dont on a deja supprimé le manga (on
+	 *            : la liste des mangas dont on a deja supprimï¿½ le manga (on
 	 *            utilise cette liste pour ne pas relire le fichier)
 	 *
 	 */
@@ -44,8 +48,8 @@ public class MangaSaver {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
 			// on efface toutes les lignes du fichier contenant les mangas de
-			// statut donné puis on y réécrit tous les mangas sauf celui de
-			// titre donné
+			// statut donnï¿½ puis on y rï¿½ï¿½crit tous les mangas sauf celui de
+			// titre donnï¿½
 			boolean isFirstLine = true;
 			for (Manga manga : newList) {
 				if (!manga.getTitle().equals(title.trim())) {
