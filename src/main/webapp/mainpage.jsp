@@ -59,22 +59,22 @@
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-
+		Integer add_chapter = Integer.parseInt(request.getParameter("add_chapter"));
 		String add_status = request.getParameter("add_status");
 		System.out.println("requete d'ajout : title=" + add_title + " style=" + add_style + " priority="
-				+ add_priority + " status=" + add_status);
-		if (!add_title.equals("") && !MangaLister.alreadyExists(mangas, add_title)) {
-			svc.addManga(add_status, add_title, add_style, add_priority);
-		}
+				+ add_priority + " status=" + add_status + " add_chapter=" + add_chapter);
+		if (!add_title.equals("") && !MangaLister.alreadyExists(add_title) && add_chapter >= 0) {
+			svc.addManga(add_status, add_title, add_style, add_chapter, add_priority);
+		} 
 		response.sendRedirect("mainpage.jsp"); // reload the page to view changes
 	}
 
-	// removes a manga	
+	// removes a manga
 
 	if (request.getParameter("remove_submit") != null) {
 
 		String remove_title = request.getParameter("remove_title");
-		svc.removeManga(status, mangas, remove_title);
+		svc.removeManga(remove_title);
 		response.sendRedirect("mainpage.jsp");
 
 	}
@@ -294,6 +294,11 @@
 					</select>
 				</p>
 				<p>
+					<label for="add_chapter">Chapitre lu</label>
+					<input type="number" id="add_chapter" name="add_chapter" min="0"/>
+					<script>document.getElementById("add_chapter").value = "0";</script>
+				</p>
+				<p>
 					<input name="add_submit" type="submit" value="Ajouter le manga" />
 				</p>
 				<input name="status" type="hidden" value="<%=status%>"> <input
@@ -343,8 +348,6 @@
 	<% 
 	if (request.getParameter("search_submit") != null) {
 		
-		System.out.println("ici");
-		
 		if(!search_result.equals("not_found")) {
 			String search_result_FRENCH = null;
 			if(search_result.equals("to_read")) {
@@ -354,7 +357,6 @@
 			} else if(search_result.equals("finished")) {
 				search_result_FRENCH = "Terminés";
 			}
-			System.out.println("ici 2");
 			%>
 			<script>alert("Le manga [<%= search_title.trim() %>] a été trouvé dans la catégorie : <%= search_result_FRENCH %>");</script>
 	<% 

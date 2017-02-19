@@ -66,7 +66,6 @@ public class MangaLister {
 
 		String[] tab = line.split("\\|");
 
-		// System.out.println(line + " --> " + Arrays.toString(tab));
 		Manga manga = new Manga(tab[0].trim());
 		try {
 			manga.setStyle(tab[1].trim());
@@ -83,17 +82,28 @@ public class MangaLister {
 
 	}
 
-	public static boolean alreadyExists(List<Manga> mangas, String name) {
+	public static boolean alreadyExists(String name) {
 
 		boolean res = false;
 
-		for (Manga manga : mangas) {
-			if (manga.getTitle().trim().equalsIgnoreCase(name)) {
-				res = true;
+		// iterates over all lists of mangas (to_read, in_progress and finished)
+		List<List<Manga>> list = new ArrayList<List<Manga>>();
+		list.add(getMangas("to_read", "all", null));
+		list.add(getMangas("in_progress", "all", null));
+		list.add(getMangas("finished", "all", null));
+
+		for (List<Manga> list_i : list) {
+
+			for (Manga manga : list_i) {
+				if (manga.getTitle().trim().equalsIgnoreCase(name)) {
+					res = true;
+				}
 			}
+
 		}
 
 		return res;
 
 	}
+
 }
