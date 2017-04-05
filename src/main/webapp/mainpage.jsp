@@ -50,7 +50,7 @@
 	// adds a manga
 
 	if (request.getParameter("add_submit") != null) {
-
+		
 		String add_title = request.getParameter("add_title");
 		String add_style = request.getParameter("add_style");
 		Integer add_priority = null;
@@ -65,8 +65,8 @@
 				+ add_priority + " status=" + add_status + " add_chapter=" + add_chapter);
 		if (!add_title.equals("") && !MangaLister.alreadyExists(add_title) && add_chapter >= 0) {
 			svc.addManga(add_status, add_title, add_style, add_chapter, add_priority);
-		} 
-		response.sendRedirect("mainpage.jsp"); // reload the page to view changes
+		}
+		response.sendRedirect("main"); // reload the page to view changes
 	}
 
 	// removes a manga
@@ -75,7 +75,7 @@
 
 		String remove_title = request.getParameter("remove_title");
 		svc.removeManga(remove_title);
-		response.sendRedirect("mainpage.jsp");
+		response.sendRedirect("main");
 
 	}
 
@@ -116,17 +116,21 @@
 		m.setPriority(Integer.parseInt(move_priority));
 		m.setChapter(Integer.parseInt(move_chapter));
 		svc.changeStatusOfManga(mangas, m, status, new_status);
-		response.sendRedirect("mainpage.jsp");
+		response.sendRedirect("main");
 	}
 	
 %>
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
+	
+	<div>
+		
+	</div>
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
 	<div class="section_display_mangas">
 	
-		<form action='mainpage.jsp' method='post'>
+		<form action="<%= request.getContextPath() %>/main" method="post">
 
 		<table>
 			<tr>
@@ -247,7 +251,7 @@
 
 			<h2>Ajouter un manga</h2>
 
-			<form action="mainpage.jsp" method="post">
+			<form action="<%= request.getContextPath() %>/main" method="post">
 				<p>
 					<label for="add_title">Titre (<strong>obligatoire</strong>)
 						:
@@ -312,7 +316,7 @@
 
 			<h2>Supprimer un manga</h2>
 
-			<form action="mainpage.jsp" method="post">
+			<form action="<%= request.getContextPath() %>/main" method="post">
 				<p>
 					<label for="remove_title">Titre :</label> <input id="remove_title"
 						name="remove_title" type="text" size="30" />
@@ -329,7 +333,7 @@
 
 			<h2>Recherche</h2>
 
-			<form action="mainpage.jsp" method="post">
+			<form action="<%= request.getContextPath() %>/main" method="post">
 				<p>
 					<label for="search_title">Titre :</label> <input id="search_title"
 						name="search_title" type="text" size="30" />

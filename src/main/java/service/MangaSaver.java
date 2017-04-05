@@ -1,6 +1,9 @@
 package service;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -15,15 +18,17 @@ public class MangaSaver {
 		String path = StatusUtil.getPathFromStatus(status);
 
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(path, true));
-			boolean isFirstLine = true;
-			if (!isFirstLine) {
+			File f = new File(path);
+			BufferedReader br = new BufferedReader(new FileReader(f));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(f, true));
+			boolean fileIsEmpty = (br.readLine() == null);
+			if (!fileIsEmpty) {
 				bw.newLine();
 			}
-			isFirstLine = false;
 			bw.append(manga.getTitle() + (manga.getStyle() != null ? " | " + manga.getStyle() : "")
 					+ (manga.getPriority() != null ? " | " + manga.getPriority() : "")
 					+ (manga.getChapter() != null ? " | " + manga.getChapter() : ""));
+			br.close();
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
