@@ -14,7 +14,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="/mangalist/css/main.css" />
 <title>Mangalist : gère tes mangas lus ou en cours !</title>
-<body>
+<body id="body">
 
 <%
 	// Get parameters from the url
@@ -104,7 +104,7 @@
 	}
 	
 	// change the status of a manga
-	String move_title = request.getParameter("move_title"); 
+	String move_title = request.getParameter("move_title");
 	if(move_title != null) {
 		String move_style = request.getParameter("move_style");
 		String move_priority = request.getParameter("move_priority");
@@ -124,7 +124,14 @@
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 	
 	<div>
-		
+		<script src="/mangalist/javascript/jscolor.js"></script>
+		Choisissez la couleur de l'arrière plan : 
+		<input class="jscolor" onchange="update(this.jscolor)" value="313b3f"></input>
+		<script>
+			function update(jscolor) {
+			    document.getElementById('body').style.backgroundColor = '#' + jscolor
+			}
+		</script>
 	</div>
 
 	<!--  Main section of the page. Display mangas of the selected category (status)(finished, in progress,...) -->
