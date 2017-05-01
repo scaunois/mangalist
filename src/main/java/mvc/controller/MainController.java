@@ -9,13 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = { "", "/main" })
+@WebServlet(urlPatterns = { "/main" })
 public class MainController extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		System.out.println("GET /main");
 		this.getServletContext().getRequestDispatcher("/mainpage.jsp").forward(request, response);
 
 	}

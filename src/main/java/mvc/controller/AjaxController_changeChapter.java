@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = { "/controller_ajax" })
-public class AjaxController extends HttpServlet {
+@WebServlet(urlPatterns = { "/ajax_change_chapter" })
+public class AjaxController_changeChapter extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		this.getServletContext().getRequestDispatcher("/ajax.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/ajax/change_chapter.jsp").forward(request, response);
 
 	}
 

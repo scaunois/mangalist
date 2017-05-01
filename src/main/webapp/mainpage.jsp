@@ -1,4 +1,6 @@
 
+<%@page import="service.singleton.ConfigurationSvc"%>
+<%@page import="org.apache.commons.io.FileUtils"%>
 <%@ page import="mvc.model.*"%>
 <%@ page import="service.*"%>
 
@@ -17,6 +19,13 @@
 <body id="body">
 
 <%
+
+	// Load background and text color from configuration file
+	ConfigurationSvc configurationSvc = ConfigurationSvc.getInstance();
+	String backgroundColor = configurationSvc.getBackgroundColor();
+	String textColor = configurationSvc.getTextColor();
+	System.out.println("Loading configuration : backgroundColor=" + backgroundColor + " textColor=" + textColor);
+
 	// Get parameters from the url
 
 	String status = request.getParameter("status");
@@ -110,7 +119,6 @@
 		String move_priority = request.getParameter("move_priority");
 		String move_chapter = request.getParameter("move_chapter");
 		String new_status = request.getParameter("new_status");
-		System.out.println("move_title=" + move_title + " new_status=" + new_status);
 		Manga m = new Manga(move_title);
 		m.setStyle(move_style);
 		m.setPriority(Integer.parseInt(move_priority));
@@ -123,13 +131,34 @@
 
 	<h1>Mangalist : gère tes mangas lus ou en cours !</h1>
 	
+	<script>
+		document.getElementById('body').style.backgroundColor = '#<%= backgroundColor %>';
+		document.getElementById('body').style.color = '#<%= textColor %>';
+	</script>
+	
+	<!-- Use of jscolor.js to offer the possibility to the user to change the color of the text and the background -->
 	<div>
 		<script src="/mangalist/javascript/jscolor.js"></script>
 		Choisissez la couleur de l'arrière plan : 
-		<input class="jscolor" onchange="update(this.jscolor)" value="313b3f"></input>
+		<input id="backgroundColor" class="jscolor" onchange="updateBackgroundColor(this.jscolor)" value="<%= backgroundColor %>"></input> <br/>
+		Choisissez la couleur du texte : 
+		<input id="textColor" class="jscolor" onchange="updateTextColor(this.jscolor)" value="<%= textColor %>"></input>
 		<script>
-			function update(jscolor) {
-			    document.getElementById('body').style.backgroundColor = '#' + jscolor
+			function updateBackgroundColor(jscolor) {
+			    document.getElementById('body').style.backgroundColor = '#' + jscolor;
+			    saveBackgroundAndTextColor();
+			}
+			function updateTextColor(jscolor) {
+			    document.getElementById('body').style.color = '#' + jscolor;
+			    saveBackgroundAndTextColor();
+			}
+			function saveBackgroundAndTextColor() {
+				var xhr = new XMLHttpRequest();
+				xhr.open(
+					'GET', 
+					'ajax_save_properties?backgroundColor=' + document.getElementById('backgroundColor').value + '&textColor=' + document.getElementById('textColor').value 
+				);
+				xhr.send(null);
 			}
 		</script>
 	</div>
@@ -388,8 +417,6 @@
 		url += '&style=' + document.getElementById('select_style').value;
 		url += '&priority_str=' + document.getElementById('select_priority').value;
 
-		//alert('appel page ' + url);
-
 		window.location.href = url;
 
 	}
@@ -421,7 +448,7 @@
 		input.parentNode.replaceChild(label, input);
 		
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'controller_ajax?i=' + i
+		xhr.open('GET', 'mangalist/ajax_change_chapter?i=' + i
 				+ '&status=<%=status%>'
 				+ '&hidden_title_' + i + '=' + document.getElementById('hidden_title_' + i).value
 				+ '&hidden_style_' + i + '=' + document.getElementById('hidden_style_' + i).value
