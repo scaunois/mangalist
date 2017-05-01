@@ -24,7 +24,6 @@
 	ConfigurationSvc configurationSvc = ConfigurationSvc.getInstance();
 	String backgroundColor = configurationSvc.getBackgroundColor();
 	String textColor = configurationSvc.getTextColor();
-	System.out.println("Loading configuration : backgroundColor=" + backgroundColor + " textColor=" + textColor);
 
 	// Get parameters from the url
 
@@ -190,8 +189,8 @@
 				<input type="hidden" id="hidden_style_<%=i%>" value="<%=m.getStyle()%>" />
 				<input type="hidden" id="hidden_priority_<%=i%>" value="<%=m.getPriority()%>" /></td>
 				<td><%=m.getPriority()%></td>
-				<% if(button_move_to_finished == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished" >Terminé</a></td> <% } %>
-				<% if(button_move_to_in_progress == true) { %> <td><a href="mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress" >Commencé</a></td> <% } %>
+				<% if(button_move_to_finished == true) { %> <td><input type="button" value="Marquer comme terminé" onclick="window.location = 'mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=finished'" /></td> <% } %>
+				<% if(button_move_to_in_progress == true) { %> <td><input type="button" value="Marquer comme commencé" onclick="window.location='mainpage.jsp?status=<%=status%>&style=<%=style%>&move_title=<%=m.getTitle()%>&move_style=<%=m.getStyle()%>&move_priority=<%=m.getPriority()%>&move_chapter=<%=m.getChapter()%>&new_status=in_progress'" /></td> <% } %>
 			</tr>
 			<%
 				}
